@@ -1,2 +1,2 @@
-Full Stack open course excersies. <br />
+Full Stack open course exercises. <br />
 https://fullstackopen.com/en/
