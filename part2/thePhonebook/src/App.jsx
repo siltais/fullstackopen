@@ -43,15 +43,18 @@ const App = () => {
               setDisplayMessage(null)
             }, 5000)
           })
-          .catch(error => {
+          .catch(
+            error => {
             setMessageClass('error')
-            setDisplayMessage(
-              `Information of ${person.name} has already been removed from server`
-            )
-            setTimeout(() => {
-              setDisplayMessage(null)
-            }, 5000)
-            setPersons(persons.filter(p => p.id !== person.id))
+            if(error.response.data.error){
+              setDisplayMessage(error.response.data.error)
+            }else{
+              setDisplayMessage(`Information of ${person.name} has already been removed from server`)
+              setTimeout(() => {
+                setDisplayMessage(null)
+              }, 5000)
+              setPersons(persons.filter(p => p.id !== person.id))
+            }
           })
 
       }
@@ -75,6 +78,9 @@ const App = () => {
         setTimeout(() => {
           setDisplayMessage(null)
         }, 5000)
+    }).catch(error => {
+      setMessageClass('error')
+      setDisplayMessage(error.response.data.error)
     })
   }
 
@@ -94,6 +100,11 @@ const App = () => {
         }, 5000)
       })
       .catch(error => {
+        setMessageClass('error')
+        setDisplayMessage(`Information of ${person.name} has already been removed from server`)
+        setTimeout(() => {
+          setDisplayMessage(null)
+        }, 5000)
         setPersons(persons.filter(p => p.id !== id))
       })
     }    
