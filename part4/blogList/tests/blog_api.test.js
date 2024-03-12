@@ -39,12 +39,18 @@ beforeEach(async () => {
   await Blog.insertMany(initialBlogs)
 })
 
-test('correct amount of blogs & blogs are returned as json ', async () => {
+test('correct amount of blogs & blogs are returned as json', async () => {
   const response = await api
     .get('/api/blogs')
     .expect(200)
     .expect('Content-Type', /application\/json/)
-    assert.strictEqual(response.body.length, initialBlogs.length)
+  assert.strictEqual(response.body.length, initialBlogs.length)
+})
+
+test('unique identifier property of the blog posts is named id', async () => {
+  const response = await api
+    .get('/api/blogs')
+  assert(response.body[0].hasOwnProperty('id'))
 })
 
 after(async () => {
