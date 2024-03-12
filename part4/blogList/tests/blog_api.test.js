@@ -34,6 +34,16 @@ const initialBlogs = [
   },
 ]
 
+const newBlog = {
+  _id: "5a422b3a1b54a643354d17f9",
+  title: "somewhere else",
+  author: "Wikipedia",
+  url: "https://en.wiktionary.org/wiki/somewhere_else",
+  likes: 1,
+  __v: 0
+}
+
+
 beforeEach(async () => {
   await Blog.deleteMany({})
   await Blog.insertMany(initialBlogs)
@@ -51,6 +61,18 @@ test('unique identifier property of the blog posts is named id', async () => {
   const response = await api
     .get('/api/blogs')
   assert(response.body[0].hasOwnProperty('id'))
+})
+
+test('HTTP POST request to the /api/blogs URL successfully creates a new blog post', async () => { 
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+  const response = await api.get('/api/blogs')
+  const titles = response.body.map(r => r.title)
+  assert.strictEqual(response.body.length, initialBlogs.length + 1)
+  assert(titles.includes('somewhere else'))
 })
 
 after(async () => {
