@@ -41,6 +41,15 @@ const missingLikesBlog = {
   url: "https://en.wikipedia.org/wiki/List_of_most-liked_tweets",
 }
 
+const missingUrlBlog = {
+  title: "React (software)",
+  author: "Wikipedia",
+}
+
+const missingTitleBlog = {
+  author: "Wikipedia",
+  url: "https://en.wikipedia.org/wiki/Blog",
+}
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -83,6 +92,19 @@ test('if the likes property is missing from the request, it will default to the 
   const savedBlog = response.body.filter(obj => obj.title === missingLikesBlog.title)
   assert(savedBlog[0].hasOwnProperty('likes'))
   assert(savedBlog[0].likes === 0)
+})
+
+test('status code "400 Bad Request" if the title or url properties are missing', async () => { 
+  await api
+    .post('/api/blogs')
+    .send(missingTitleBlog)
+    .expect(400)
+  await api
+    .post('/api/blogs')
+    .send(missingUrlBlog)
+    .expect(400)
+  let response = await api.get('/api/blogs')
+  assert.strictEqual(response.body.length, initialBlogs.length)
 })
 
 after(async () => {
