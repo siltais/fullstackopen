@@ -51,6 +51,15 @@ const missingTitleBlog = {
   url: "https://en.wikipedia.org/wiki/Blog",
 }
 
+const updatingBlog =   {
+  title: "React Patterns on GitHub",
+  author: "Michael Chan.",
+  url: "https://github.com/chantastic/sites",
+  likes: 999,
+}
+  
+
+
 beforeEach(async () => {
   await Blog.deleteMany({})
   await Blog.insertMany(initialBlogs)
@@ -117,6 +126,22 @@ test('delete a single blog', async () => {
   blogsInDB = await api
     .get('/api/blogs')
   assert.strictEqual(blogsInDB.body.length, initialBlogs.length - 1)
+})
+
+test('updating the information of an individual blog post', async () => {
+  let blogsInDB = await api
+    .get('/api/blogs')
+  const blogToUpdate = blogsInDB.body[0]
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatingBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+  blogsInDB = await api
+    .get('/api/blogs')
+  const updatedBlog = blogsInDB.body.find(obj => obj.id === blogToUpdate.id)
+  delete updatedBlog.id
+  assert.deepStrictEqual(updatedBlog, updatingBlog)    
 })
 
 after(async () => {
