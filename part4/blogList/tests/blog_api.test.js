@@ -9,38 +9,36 @@ const Blog = require('../models/blog')
 
 const initialBlogs = [
   {
-    _id: "5a422a851b54a676234d17f7",
     title: "React patterns",
     author: "Michael Chan",
     url: "https://reactpatterns.com/",
     likes: 7,
-    __v: 0
   },
   {
-    _id: "5a422aa71b54a676234d17f8",
     title: "Go To Statement Considered Harmful",
     author: "Edsger W. Dijkstra",
     url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
     likes: 5,
-    __v: 0
   },
   {
-    _id: "5a422b3a1b54a676234d17f9",
     title: "Canonical string reduction",
     author: "Edsger W. Dijkstra",
     url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
     likes: 12,
-    __v: 0
   },
 ]
 
 const newBlog = {
-  _id: "5a422b3a1b54a643354d17f9",
   title: "somewhere else",
   author: "Wikipedia",
   url: "https://en.wiktionary.org/wiki/somewhere_else",
   likes: 1,
-  __v: 0
+}
+
+const missingLikesBlog = {
+  title: "most liked",
+  author: "Wikipedia",
+  url: "https://en.wikipedia.org/wiki/List_of_most-liked_tweets",
 }
 
 
@@ -73,6 +71,18 @@ test('HTTP POST request to the /api/blogs URL successfully creates a new blog po
   const titles = response.body.map(r => r.title)
   assert.strictEqual(response.body.length, initialBlogs.length + 1)
   assert(titles.includes('somewhere else'))
+})
+
+test('if the likes property is missing from the request, it will default to the value 0', async () => { 
+  await api
+    .post('/api/blogs')
+    .send(missingLikesBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+  const response = await api.get('/api/blogs')
+  const savedBlog = response.body.filter(obj => obj.title === missingLikesBlog.title)
+  assert(savedBlog[0].hasOwnProperty('likes'))
+  assert(savedBlog[0].likes === 0)
 })
 
 after(async () => {
