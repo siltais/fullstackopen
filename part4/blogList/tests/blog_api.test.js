@@ -107,6 +107,18 @@ test('status code "400 Bad Request" if the title or url properties are missing',
   assert.strictEqual(response.body.length, initialBlogs.length)
 })
 
+test('delete a single blog', async () => { 
+  let blogsInDB = await api
+    .get('/api/blogs')
+  const blogToDelete = blogsInDB.body[0]
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+  blogsInDB = await api
+    .get('/api/blogs')
+  assert.strictEqual(blogsInDB.body.length, initialBlogs.length - 1)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
