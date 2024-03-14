@@ -44,7 +44,127 @@ describe('when there is initially one user in db', () => {
     const usernames = usersAtEnd.body.map(u => u.username)
     assert(usernames.includes(newUser.username))
   })
+
+  test('user with username that has less than 3 characters is not created', async () => {
+    const usersAtStart = await api
+    .get('/api/users')
+    
+    const newUser = {
+      username: 'si',
+      name: 'Matias Rianio',
+      password: 'super',
+    }
+    
+    const message = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAtEnd = await api
+    .get('/api/users')
+    assert.strictEqual(usersAtEnd.body.length, usersAtStart.body.length)
+    assert(message.body.error.includes('User validation failed:'))
+  })
+
+  test('user with no username is not created', async () => {
+    const usersAtStart = await api
+    .get('/api/users')
+    
+    const newUser = {
+      name: 'Matias Rianio',
+      password: 'super',
+    }
+    
+    const message = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAtEnd = await api
+    .get('/api/users')
+    assert.strictEqual(usersAtEnd.body.length, usersAtStart.body.length)
+    assert(message.body.error.includes('User validation failed:'))
+  })
+
+  test('user with password that has less than 3 characters is not created', async () => {
+    const usersAtStart = await api
+    .get('/api/users')
+    
+    const newUser = {
+      username: 'anotherUser',
+      name: 'Matias Rianio',
+      password: 'eo',
+    }
+
+    const errorMsg = {
+        error: 'Password must be at least 3 characters long'
+    }
+    
+    const message = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAtEnd = await api
+    .get('/api/users')
+    assert.strictEqual(usersAtEnd.body.length, usersAtStart.body.length)
+    assert.deepStrictEqual(errorMsg, message.body)
+  })
+
+  test('user with no password is not created', async () => {
+    const usersAtStart = await api
+    .get('/api/users')
+    
+    const newUser = {
+      username: 'anotherUser',
+      name: 'Matias Rianio',
+    }
+
+    const errorMsg = {
+        error: 'Password must be at least 3 characters long'
+    }
+    
+    const message = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    const usersAtEnd = await api
+    .get('/api/users')
+    assert.strictEqual(usersAtEnd.body.length, usersAtStart.body.length)
+    assert.deepStrictEqual(errorMsg, message.body)
+  })
+
+  test('user with existing username is not created', async () => {
+    const usersAtStart = await api
+    .get('/api/users')
+    
+    const newUser = {
+      username: 'root',
+      name: 'Matias Rianio',
+      password: 'password',
+    }
+
+    const errorMsg = {
+        error: 'expected `username` to be unique'
+    }
+    
+    const message = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+
+    const usersAtEnd = await api
+    .get('/api/users')
+    assert.strictEqual(usersAtEnd.body.length, usersAtStart.body.length)
+    assert.deepStrictEqual(errorMsg, message.body)
+  })
+
+
 })
+
+
 
 after(async () => {
   await mongoose.connection.close()
