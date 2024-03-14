@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken')
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({})
@@ -16,7 +15,7 @@ blogsRouter.post('/', async (request, response) => {
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token invalid' })
   }
-  const user = await User.findById(decodedToken.id)
+  const user = request.user
 
   const blog = new Blog({
     title: body.title,
@@ -32,22 +31,16 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
 
+  const user = request.user
   const blogToDelete = await Blog.findById(request.params.id)
 
-  if(decodedToken.id.toString() === blogToDelete.user.toString()){
+  if(user.id.toString() === blogToDelete.user.toString()){
     await Blog.findByIdAndDelete(request.params.id)
     response.status(204).end()
   } else {
     response.status(403).json({ error: 'not enough privileges to perform an action'})
   }
-
-
-
 })
 
 blogsRouter.put('/:id', async(request, response) => {
