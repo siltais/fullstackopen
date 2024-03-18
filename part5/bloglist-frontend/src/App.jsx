@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import NewBlogForm from './components/NewBlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -12,10 +14,8 @@ const App = () => {
   const [displayMessage, setDisplayMessage] = useState(null)
   const [messageClass, setMessageClass] = useState('')
 
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [newBlog, setNewBlog] = useState('')
+  const blogFormRef = useRef()
 
   useEffect(() => {
     if(user !== null){
@@ -74,28 +74,25 @@ const App = () => {
     setUser(null)
   }
 
-  const handleCreateBlog = async (event) => {
-    event.preventDefault()
+  const handleCreateBlog = async (blogObject) => {
     try{
-      const createNew = await blogService.createNew({
-        title, author, url
-      })
-      setNewBlog(createNew)
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-      sendMessage('success', `a new blog ${createNew.title} by ${createNew.author} added`)
-      setTimeout(() => {
-        clearMessage()
-      }, 5000)
+      const createNew = await blogService
+        .createNew(blogObject)
+        setNewBlog(createNew)
+        blogFormRef.current.toggleVisibility()
+        sendMessage('success', `a new blog ${createNew.title} by ${createNew.author} added`)
+        setTimeout(() => {
+          clearMessage()
+        }, 5000)
     } catch (exception) {
       sendMessage('error', 'Something went wrong! Couldn`t save the new blog.')
       setTimeout(() => {
         clearMessage()
       }, 5000)
     }
+  }
+  
 
-  } 
 
   const loginForm = () => (
     
@@ -128,43 +125,18 @@ const App = () => {
 
 
   const blogForm = () => (
+    
     <div>
       <h2>blogs</h2>
       <div className = {messageClass}>
         {displayMessage}
       </div>
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
-      <form onSubmit={handleCreateBlog}>
-        <h2>create new</h2>
-        <div>
-          title:
-            <input
-              type="text"
-              value={title}
-              name="Title"
-              onChange={({ target }) => setTitle(target.value)}
-            />
-        </div>
-        <div>
-          author:
-          <input
-            type="text"
-            value={author}
-            name="Author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          url:
-          <input
-            type="text"
-            value={url}
-            name="Url"
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button type="submit">create</button>
-      </form>  
+      <Togglable buttonLabel="new blog" ref={blogFormRef}>
+        <NewBlogForm
+          createBlog = {handleCreateBlog}
+        />
+      </Togglable>
       {blogs.map(
         blog =>
           <Blog key={blog.id} blog={blog} />
