@@ -94,8 +94,7 @@ const App = () => {
   
 
 
-  const loginForm = () => (
-    
+  const loginForm = () => (   
     <form onSubmit={handleLogin}>
       <h2>log in to application</h2>
       <div className = {messageClass}>
@@ -124,8 +123,7 @@ const App = () => {
   )
 
 
-  const blogForm = () => (
-    
+  const blogForm = () => (  
     <div>
       <h2>blogs</h2>
       <div className = {messageClass}>
