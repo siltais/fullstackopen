@@ -8,7 +8,9 @@ const App = () => {
   const [username, setUsername] = useState('') 
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState(null)
+
+  const [displayMessage, setDisplayMessage] = useState(null)
+  const [messageClass, setMessageClass] = useState('')
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -50,11 +52,21 @@ const App = () => {
       setPassword('')
 
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
+      sendMessage('error', 'Wrong username or password')
       setTimeout(() => {
-        setErrorMessage(null)
+        clearMessage()
       }, 5000)
     }
+  }
+
+  const clearMessage = () => {
+    setDisplayMessage(null)
+    setMessageClass('')
+  }
+
+  const sendMessage = (msgClass, textToSend) => {
+    setMessageClass(msgClass)
+    setDisplayMessage(textToSend)
   }
 
   const handleLogout = () => {
@@ -72,15 +84,26 @@ const App = () => {
       setTitle('')
       setAuthor('')
       setUrl('')
+      sendMessage('success', `a new blog ${createNew.title} by ${createNew.author} added`)
+      setTimeout(() => {
+        clearMessage()
+      }, 5000)
     } catch (exception) {
-      console.log(exception)
+      sendMessage('error', 'Something went wrong! Couldn`t save the new blog.')
+      setTimeout(() => {
+        clearMessage()
+      }, 5000)
     }
 
   } 
 
   const loginForm = () => (
+    
     <form onSubmit={handleLogin}>
       <h2>log in to application</h2>
+      <div className = {messageClass}>
+        {displayMessage}
+      </div>
       <div>
         username
           <input
@@ -88,7 +111,7 @@ const App = () => {
             value={username}
             name="Username"
             onChange={({ target }) => setUsername(target.value)}
-        />
+          />
       </div>
       <div>
         password
@@ -97,7 +120,7 @@ const App = () => {
             value={password}
             name="Password"
             onChange={({ target }) => setPassword(target.value)}
-        />
+          />
       </div>
       <button type="submit">login</button>
     </form>      
@@ -107,6 +130,9 @@ const App = () => {
   const blogForm = () => (
     <div>
       <h2>blogs</h2>
+      <div className = {messageClass}>
+        {displayMessage}
+      </div>
       <p>{user.name} logged in <button onClick={handleLogout}>logout</button></p>
       <form onSubmit={handleCreateBlog}>
         <h2>create new</h2>
