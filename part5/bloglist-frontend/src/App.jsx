@@ -7,7 +7,7 @@ import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('') 
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
@@ -36,7 +36,7 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    
+
     try {
       const user = await loginService.login({
         username, password,
@@ -44,7 +44,7 @@ const App = () => {
 
       window.localStorage.setItem(
         'loggedInUser', JSON.stringify(user)
-      ) 
+      )
 
       blogService.setToken(user.token)
       setUser(user)
@@ -78,12 +78,12 @@ const App = () => {
     try{
       const createNew = await blogService
         .createNew(blogObject)
-        setNewBlog(createNew)
-        blogFormRef.current.toggleVisibility()
-        sendMessage('success', `a new blog ${createNew.title} by ${createNew.author} added`)
-        setTimeout(() => {
-          clearMessage()
-        }, 5000)
+      setNewBlog(createNew)
+      blogFormRef.current.toggleVisibility()
+      sendMessage('success', `a new blog ${createNew.title} by ${createNew.author} added`)
+      setTimeout(() => {
+        clearMessage()
+      }, 5000)
     } catch (exception) {
       sendMessage('error', 'Something went wrong! Couldn`t save the new blog.')
       setTimeout(() => {
@@ -91,18 +91,18 @@ const App = () => {
       }, 5000)
     }
   }
-  
+
   const handleAddLike = async (blogToLike) => {
     try {
       const updatedBlog = {
-        likes:blogToLike.likes + 1, 
-        author:blogToLike.author, 
-        title:blogToLike.title, 
-        url:blogToLike.url, 
+        likes:blogToLike.likes + 1,
+        author:blogToLike.author,
+        title:blogToLike.title,
+        url:blogToLike.url,
         user:blogToLike.user.id
       }
       await blogService
-        .updateBlog( blogToLike.id, updatedBlog ) 
+        .updateBlog( blogToLike.id, updatedBlog )
       setNewBlog(updatedBlog)
     } catch (exception) {
       sendMessage('error', 'Something went wrong! Couldn`t add like to the blog.')
@@ -127,7 +127,7 @@ const App = () => {
     }
   }
 
-  const loginForm = () => (   
+  const loginForm = () => (
     <form onSubmit={handleLogin}>
       <h2>log in to application</h2>
       <div className = {messageClass}>
@@ -135,28 +135,28 @@ const App = () => {
       </div>
       <div>
         username
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
+        <input
+          type="text"
+          value={username}
+          name="Username"
+          onChange={({ target }) => setUsername(target.value)}
+        />
       </div>
       <div>
         password
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
+        <input
+          type="password"
+          value={password}
+          name="Password"
+          onChange={({ target }) => setPassword(target.value)}
+        />
       </div>
       <button type="submit">login</button>
-    </form>      
+    </form>
   )
 
 
-  const blogForm = () => (  
+  const blogForm = () => (
     <div>
       <h2>blogs</h2>
       <div className = {messageClass}>
@@ -170,17 +170,17 @@ const App = () => {
       </Togglable>
       {blogs.map(
         blog =>
-          <Blog 
-            key={blog.id} 
-            blog={blog} 
+          <Blog
+            key={blog.id}
+            blog={blog}
             handleAddLike = {handleAddLike}
             loggedInUser = {user}
-            handleRemoveBlog = {handleRemoveBlog}  
+            handleRemoveBlog = {handleRemoveBlog}
           />
-       )}
+      )}
     </div>
   )
-    
+
 
   if (user === null) {
     return loginForm()

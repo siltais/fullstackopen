@@ -1,12 +1,12 @@
 
 import { useState } from 'react'
 
-const NewBlogForm = ({createBlog}) => {
+const NewBlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   const handleCreateBlog = (event) => {
-  event.preventDefault()
+    event.preventDefault()
     try{
       createBlog({
         title: title,
@@ -22,16 +22,16 @@ const NewBlogForm = ({createBlog}) => {
   }
 
   return (
-      <form onSubmit={handleCreateBlog}>
+    <form onSubmit={handleCreateBlog}>
       <h2>create new</h2>
       <div>
         title:
-          <input
-            type="text"
-            value={title}
-            name="Title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
+        <input
+          type="text"
+          value={title}
+          name="Title"
+          onChange={({ target }) => setTitle(target.value)}
+        />
       </div>
       <div>
         author:
@@ -52,7 +52,7 @@ const NewBlogForm = ({createBlog}) => {
         />
       </div>
       <button type="submit">create</button>
-    </form> 
+    </form>
   )
 }
 

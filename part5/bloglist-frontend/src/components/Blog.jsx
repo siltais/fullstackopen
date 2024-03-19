@@ -16,23 +16,22 @@ const Blog = ({ blog, handleAddLike, loggedInUser, handleRemoveBlog }) => {
       return <div><button onClick={() => handleRemoveBlog(blog)}>Remove</button></div>
     }
   }
-  
+
   return (
     <div style={blogStyle}>
       <div>
         {blog.title} {blog.author}
-          <button style = {hideWhenVisible} onClick={() => setBlogVisible(true)}>view</button>
-          <button style = {showWhenVisible} onClick={() => setBlogVisible(false)}>hide</button>
+        <button style = {hideWhenVisible} onClick={() => setBlogVisible(true)}>view</button>
+        <button style = {showWhenVisible} onClick={() => setBlogVisible(false)}>hide</button>
         <div style = {showWhenVisible}>
           {blog.url}<br />
           likes {blog.likes}
-          <button onClick={() => handleAddLike(blog)}>like</button><br /> 
+          <button onClick={() => handleAddLike(blog)}>like</button><br />
           {blog.user.name}
-          {displayRemoveButton(loggedInUser.username, blog)}  
+          {displayRemoveButton(loggedInUser.username, blog)}
         </div>
-     
       </div>
-    </div>  
+    </div>
   )
 }
 export default Blog
