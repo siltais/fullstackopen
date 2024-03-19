@@ -1,5 +1,5 @@
 import { useState } from 'react'
-const Blog = ({ blog, handleAddLike }) => {
+const Blog = ({ blog, handleAddLike, loggedInUser, handleRemoveBlog }) => {
   const [blogVisible, setBlogVisible] = useState('')
   const blogStyle = {
     paddingTop: 10,
@@ -10,6 +10,12 @@ const Blog = ({ blog, handleAddLike }) => {
   }
   const hideWhenVisible = { display: blogVisible ? 'none' : '' }
   const showWhenVisible = { display: blogVisible ? '' : 'none' }
+
+  const displayRemoveButton = (userNameLoggedIn, blog) => {
+    if(userNameLoggedIn === blog.user.username){
+      return <div><button onClick={() => handleRemoveBlog(blog)}>Remove</button></div>
+    }
+  }
   
   return (
     <div style={blogStyle}>
@@ -22,7 +28,7 @@ const Blog = ({ blog, handleAddLike }) => {
           likes {blog.likes}
           <button onClick={() => handleAddLike(blog)}>like</button><br /> 
           {blog.user.name}
-          <br />      
+          {displayRemoveButton(loggedInUser.username, blog)}  
         </div>
      
       </div>
