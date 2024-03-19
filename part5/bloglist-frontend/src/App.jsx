@@ -92,7 +92,25 @@ const App = () => {
     }
   }
   
-
+  const handleAddLike = async (blogToLike) => {
+    try {
+      const updatedBlog = {
+        likes:blogToLike.likes + 1, 
+        author:blogToLike.author, 
+        title:blogToLike.title, 
+        url:blogToLike.url, 
+        user:blogToLike.user.id
+      }
+      await blogService
+        .updateBlog( blogToLike.id, updatedBlog ) 
+      setNewBlog(updatedBlog)
+    } catch (exception) {
+      sendMessage('error', 'Something went wrong! Couldn`t add like to the blog.')
+      setTimeout(() => {
+        clearMessage()
+      }, 5000)
+    }
+  }
 
   const loginForm = () => (   
     <form onSubmit={handleLogin}>
@@ -137,7 +155,7 @@ const App = () => {
       </Togglable>
       {blogs.map(
         blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog key={blog.id} blog={blog} handleAddLike = {handleAddLike} />
        )}
     </div>
   )
