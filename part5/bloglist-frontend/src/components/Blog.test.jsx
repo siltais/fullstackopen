@@ -19,10 +19,13 @@ test('renders the blog title and author, but does not render its URL or number o
 
   render(<Blog blog = { blog } loggedInUser = {loggedInUser} />)
 
-  const element = screen.getByText('Test blog title Jeremmy Tester')
-  expect(element).toBeDefined()
-  const element2 = screen.queryByText('http://www.test.url')
-  expect(element2).toBeNull()
+  const elementAuthorTitle = screen.getByText('Test blog title Jeremmy Tester')
+  const elementUrl = screen.queryByText('http://www.test.url')
+  const elementLikes = screen.queryByText('likes 2')
+
+  expect(elementAuthorTitle).toBeDefined()
+  expect(elementUrl).toBeNull()
+  expect(elementLikes).toBeNull()
 
 })
 
