@@ -17,19 +17,16 @@ const blog = {
 }
 
 test('renders the blog title and author, but does not render its URL or number of likes by default', () => {
-
-  const { container } = render(<Blog blog={blog} loggedInUser = { loggedInUser } />)
+  const { container } = render(<Blog blog = {blog} loggedInUser = {loggedInUser} />)
   const elementAuthorTitle = screen.getByText('Test blog title Jeremmy Tester')
   const div = container.querySelector('.hiddenInBlog')
   
   expect(elementAuthorTitle).toBeDefined()
   expect(div).toHaveStyle('display: none')
-  
 })
 
 test('blog URL and number of likes are shown when the show button has been clicked', async () => {
-
-  const { container } = render(<Blog blog={blog} loggedInUser = { loggedInUser } />)
+  const { container } = render(<Blog blog = {blog} loggedInUser = {loggedInUser} />)
   const div = container.querySelector('.hiddenInBlog')
 
   expect(div).toHaveStyle('display: none')
@@ -38,12 +35,19 @@ test('blog URL and number of likes are shown when the show button has been click
   await user.click(button)
 
   expect(div).not.toHaveStyle('display: none')
-
-
-
 })
 
+test('if the like button is clicked twice, the event handler the component received as props is called twice', async () => {
+  const mockHandler = vi.fn()
+  render(<Blog blog={blog} loggedInUser = {loggedInUser} handleAddLike = {mockHandler} />)
 
+  const user = userEvent.setup()
+  const button = screen.getByText('like')
+  await user.click(button)
+  await user.click(button)
+
+  expect(mockHandler.mock.calls).toHaveLength(2)
+})
 
 
 
