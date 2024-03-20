@@ -23,8 +23,8 @@ const Blog = ({ blog, handleAddLike, loggedInUser, handleRemoveBlog }) => {
         {blog.title} {blog.author}
         <button style = {hideWhenVisible} onClick={() => setBlogVisible(true)}>view</button>
         <button style = {showWhenVisible} onClick={() => setBlogVisible(false)}>hide</button>
-        <div style = {showWhenVisible}>
-          {blog.url}<br />
+        <div className='hiddenInBlog' style = {showWhenVisible}>
+          <div>{blog.url}</div>
           likes {blog.likes}
           <button onClick={() => handleAddLike(blog)}>like</button><br />
           {blog.user.name}

@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 
 const loggedInUser = {
@@ -17,17 +18,34 @@ const blog = {
 
 test('renders the blog title and author, but does not render its URL or number of likes by default', () => {
 
-  render(<Blog blog = { blog } loggedInUser = {loggedInUser} />)
-
+  const { container } = render(<Blog blog={blog} loggedInUser = { loggedInUser } />)
   const elementAuthorTitle = screen.getByText('Test blog title Jeremmy Tester')
-  const elementUrl = screen.queryByText('http://www.test.url')
-  const elementLikes = screen.queryByText('likes 2')
-
+  const div = container.querySelector('.hiddenInBlog')
+  
   expect(elementAuthorTitle).toBeDefined()
-  expect(elementUrl).toBeNull()
-  expect(elementLikes).toBeNull()
+  expect(div).toHaveStyle('display: none')
+  
+})
+
+test('blog URL and number of likes are shown when the show button has been clicked', async () => {
+
+  const { container } = render(<Blog blog={blog} loggedInUser = { loggedInUser } />)
+  const div = container.querySelector('.hiddenInBlog')
+
+  expect(div).toHaveStyle('display: none')
+  const user = userEvent.setup()
+  const button = screen.getByText('view')
+  await user.click(button)
+
+  expect(div).not.toHaveStyle('display: none')
+
+
 
 })
+
+
+
+
 
 
 
