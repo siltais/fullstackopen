@@ -19,8 +19,8 @@ const Blog = ({ blog, handleAddLike, loggedInUser, handleRemoveBlog }) => {
 
   return (
     <div style={blogStyle}>
-      <div>
-        {blog.title} {blog.author}
+      <div data-testid="blogList">
+        <span>{blog.title} {blog.author}</span>
         <button style = {hideWhenVisible} onClick={() => setBlogVisible(true)}>view</button>
         <button style = {showWhenVisible} onClick={() => setBlogVisible(false)}>hide</button>
         <div className='hiddenInBlog' style = {showWhenVisible}>

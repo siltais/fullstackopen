@@ -42,10 +42,29 @@ describe('Blog app', () => {
             await page.getByTestId('username').fill('Ptester')
             await page.getByTestId('password').fill('wrong')
             await page.getByRole('button', { name: 'login' }).click() 
-               
+
             await expect(page.getByText('Wrong username or password')).toBeVisible()
         })
     })
 
+    describe('When logged in', () => {
+        beforeEach(async ({ page }) => {   
+            await page.getByTestId('username').fill('Ptester')
+            await page.getByTestId('password').fill('testerPassword')
+            await page.getByRole('button', { name: 'login' }).click()
+        })      
+        test('a new blog can be created', async ({ page }) => {
+            await page.getByRole('button', { name: 'new blog' }).click()
+            await page.getByTestId('title').fill('Playwright test title')
+            await page.getByTestId('author').fill('Playwright test author')
+            await page.getByTestId('url').fill('https://playwright.dev/')          
+            await page.getByRole('button', { name: 'create' }).click()
+            await expect(page.getByText('a new blog Playwright test title by Playwright test author added', { exact: true })).toBeVisible()
+            await expect(page.getByRole('button', { name: 'new blog' })).toBeVisible()
+            await expect(page.getByText('Playwright test title Playwright test author', { exact: true })).toBeVisible()
 
+        })
+    })
 })
+
+
