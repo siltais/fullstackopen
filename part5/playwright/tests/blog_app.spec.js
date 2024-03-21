@@ -12,7 +12,7 @@ describe('Blog app', () => {
         })
         await page.goto('/')
       })
-      
+
     test('displays the login form by default', async ({ page }) => {
         const locator = await page.getByText('log in to application')
         await expect(locator).toBeVisible()
@@ -24,6 +24,27 @@ describe('Blog app', () => {
         await expect(page.getByTestId('password')).toBeVisible()
 
         await expect(page.getByText('login')).toBeVisible()
+    })
+
+    describe('Login', () => {
+        test('succeeds with correct credentials', async ({ page }) => {
+            await page.getByTestId('username').fill('Ptester')
+            await page.getByTestId('password').fill('testerPassword')
+            await page.getByRole('button', { name: 'login' }).click()
+
+            await expect(page.getByText('blogs')).toBeVisible()
+            await expect(page.getByText('Playwright Tester logged in')).toBeVisible()
+            await expect(page.getByText('logout')).toBeVisible()
+            await expect(page.getByText('new blog')).toBeVisible()           
+        })
+    
+        test('fails with wrong credentials', async ({ page }) => {
+            await page.getByTestId('username').fill('Ptester')
+            await page.getByTestId('password').fill('wrong')
+            await page.getByRole('button', { name: 'login' }).click() 
+               
+            await expect(page.getByText('Wrong username or password')).toBeVisible()
+        })
     })
 
 
