@@ -1,5 +1,5 @@
 const { test, expect, describe, beforeEach  } = require('@playwright/test')
-const { createBlog, loginUser } = require('./helper')
+const { createBlog, loginUser, likeBlog } = require('./helper')
 
 describe('Blog app', () => {
     beforeEach(async ({ page, request }) => {
@@ -109,6 +109,65 @@ describe('Blog app', () => {
 
             await selectedBlog.getByRole('button', { name: 'view' }).click()
             await expect(selectedBlog.getByRole('button', { name: 'Remove' })).not.toBeVisible()
+        })
+
+        test('blogs are arranged in the order according to the likes, the blog with the most likes first', async ({ page }) => {
+            await createBlog(page, {
+                title: 'title1', 
+                author: 'author1', 
+                url: 'https://url1.url/'
+            })
+            await createBlog(page, {
+                title: 'title2', 
+                author: 'author2', 
+                url: 'https://url2.url/'
+            })
+            await createBlog(page, {
+                title: 'title3', 
+                author: 'author3', 
+                url: 'https://url3.url/'
+            })
+            await createBlog(page, {
+                title: 'title4', 
+                author: 'author4', 
+                url: 'https://url4.url/'
+            })
+
+            const blogListStart = await page.getByTestId('blogList').locator('span.blogTitle')
+            await expect(blogListStart).toHaveCount(4)
+
+            const firstBlog = await page.getByTestId('blogList').locator('span.blogTitle').nth(0)
+            const secondBlog = await page.getByTestId('blogList').locator('span.blogTitle').nth(1)
+            const thirdBlog = await page.getByTestId('blogList').locator('span.blogTitle').nth(2)
+            const fourthBlog = await page.getByTestId('blogList').locator('span.blogTitle').nth(3)
+
+            await expect(firstBlog).toHaveText('title1 author1')
+            await expect(secondBlog).toHaveText('title2 author2')
+            await expect(thirdBlog).toHaveText('title3 author3')
+            await expect(fourthBlog).toHaveText('title4 author4')
+
+            await likeBlog(page, 'title1 author1', 'https://url1.url/', 'likes 1')
+
+            await likeBlog(page, 'title3 author3', 'https://url3.url/', 'likes 1')
+            await likeBlog(page, 'title3 author3', 'https://url3.url/', 'likes 2')
+            await likeBlog(page, 'title3 author3', 'https://url3.url/', 'likes 3')
+            await likeBlog(page, 'title3 author3', 'https://url3.url/', 'likes 4')
+            await likeBlog(page, 'title3 author3', 'https://url3.url/', 'likes 5')
+
+            await likeBlog(page, 'title4 author4', 'https://url4.url/', 'likes 1')
+            await likeBlog(page, 'title4 author4', 'https://url4.url/', 'likes 2')
+            await likeBlog(page, 'title4 author4', 'https://url4.url/', 'likes 3')
+
+            const firstBlogEnd = await page.getByTestId('blogList').locator('span.blogTitle').nth(0)
+            const secondBlogEnd = await page.getByTestId('blogList').locator('span.blogTitle').nth(1)
+            const thirdBlogEnd = await page.getByTestId('blogList').locator('span.blogTitle').nth(2)
+            const fourthBlogEnd = await page.getByTestId('blogList').locator('span.blogTitle').nth(3)
+
+            await expect(firstBlogEnd).toHaveText('title3 author3')
+            await expect(secondBlogEnd).toHaveText('title4 author4')
+            await expect(thirdBlogEnd).toHaveText('title1 author1')
+            await expect(fourthBlogEnd).toHaveText('title2 author2')
+
         })
 
     })

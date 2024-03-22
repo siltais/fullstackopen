@@ -170,6 +170,7 @@ const App = () => {
           createBlog = {handleCreateBlog}
         />
       </Togglable>
+      <div data-testid="blogList">
       {blogs.map(
         blog =>
           <Blog
@@ -180,6 +181,7 @@ const App = () => {
             handleRemoveBlog = {handleRemoveBlog}
           />
       )}
+      </div>
     </div>
   )
 
