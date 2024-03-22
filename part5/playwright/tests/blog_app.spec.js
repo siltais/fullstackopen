@@ -85,10 +85,31 @@ describe('Blog app', () => {
             
             const deletedBlog = await page.getByText('Delete blog title Delete blog author', { exact: true })
             await expect(deletedBlog).not.toBeVisible()
-
         })
 
+        test('only the user who added the blog sees the blog delete button', async ({ page, request }) => {
+            await request.post('/api/users', {
+                data: {
+                  name: 'Another Tester',
+                  username: 'Atester',
+                  password: 'testerPassword'
+                }
+            })
+            await createBlog(page, {
+                title: 'Remove button seen test', 
+                author: 'Remove button test author', 
+                url: 'https://removebuttontest.url/'
+            })
+            const selectedBlog = await page.getByText('Remove button seen test Remove button test author', { exact: true }).locator('..')
+            await selectedBlog.getByRole('button', { name: 'view' }).click()
+            await expect(selectedBlog.getByRole('button', { name: 'Remove' })).toBeVisible()
 
+            await page.getByRole('button', { name: 'logout' }).click()
+            await loginUser(page, 'Atester', 'testerPassword')
+
+            await selectedBlog.getByRole('button', { name: 'view' }).click()
+            await expect(selectedBlog.getByRole('button', { name: 'Remove' })).not.toBeVisible()
+        })
 
     })
 })
