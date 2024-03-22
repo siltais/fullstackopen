@@ -19,13 +19,13 @@ const Blog = ({ blog, handleAddLike, loggedInUser, handleRemoveBlog }) => {
 
   return (
     <div style={blogStyle}>
-      <div data-testid="blogList">
+      <div>
         <span>{blog.title} {blog.author}</span>
         <button style = {hideWhenVisible} onClick={() => setBlogVisible(true)}>view</button>
         <button style = {showWhenVisible} onClick={() => setBlogVisible(false)}>hide</button>
         <div className='hiddenInBlog' style = {showWhenVisible}>
           <div>{blog.url}</div>
-          <div>likes {blog.likes}
+          <div><span>likes {blog.likes}</span>
           <button onClick={() => handleAddLike(blog)}>like</button><br />
           </div>
           {blog.user.name}
