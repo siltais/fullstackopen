@@ -4,7 +4,8 @@ import {
   Routes, 
   Route, 
   Link,
-  useParams
+  useParams,
+  useNavigate
 } from 'react-router-dom'
 
 
@@ -55,6 +56,7 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
+  const navigate = useNavigate()
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
@@ -68,6 +70,11 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    navigate('/')
+    props.setNotification(`a new anecdote ${content} created!`)
+    setTimeout(() => {
+      props.setNotification('')
+    }, 5000)
   }
 
   return (
@@ -145,10 +152,11 @@ const App = () => {
           <Link style={padding} to="/create">create new</Link>
           <Link style={padding} to="/about">about</Link>
         </div>
+        <p>{notification}</p>
         <Routes>
           <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
           <Route path="/anecdotes/:id" element={<Anecdote anecdotes={anecdotes} />} />
-          <Route path="/create" element={<CreateNew addNew={addNew} />} />
+          <Route path="/create" element={<CreateNew addNew={addNew} setNotification={setNotification} />} />
           <Route path="/about" element={<About />} />
         </Routes>
       </Router>
