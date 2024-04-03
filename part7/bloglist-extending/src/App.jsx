@@ -4,15 +4,16 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 import NewBlogForm from "./components/NewBlogForm";
 import Togglable from "./components/Togglable";
+import Notification from "./components/Notification";
+import { displayNotification } from "./reducers/notificationReducer";
+import { useDispatch } from "react-redux";
 
 const App = () => {
+  const dispatch = useDispatch();
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-
-  const [displayMessage, setDisplayMessage] = useState(null);
-  const [messageClass, setMessageClass] = useState("");
 
   const [newBlog, setNewBlog] = useState("");
   const blogFormRef = useRef();
@@ -50,21 +51,8 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      sendMessage("error", "Wrong username or password");
-      setTimeout(() => {
-        clearMessage();
-      }, 5000);
+      dispatch(displayNotification("error", "Wrong username or password", 5));
     }
-  };
-
-  const clearMessage = () => {
-    setDisplayMessage(null);
-    setMessageClass("");
-  };
-
-  const sendMessage = (msgClass, textToSend) => {
-    setMessageClass(msgClass);
-    setDisplayMessage(textToSend);
   };
 
   const handleLogout = () => {
@@ -77,18 +65,21 @@ const App = () => {
       const createNew = await blogService.createNew(blogObject);
       setNewBlog(createNew);
       blogFormRef.current.toggleVisibility();
-      sendMessage(
-        "success",
-        `a new blog ${createNew.title} by ${createNew.author} added`,
+      dispatch(
+        displayNotification(
+          "success",
+          `a new blog ${createNew.title} by ${createNew.author} added`,
+          5,
+        ),
       );
-      setTimeout(() => {
-        clearMessage();
-      }, 5000);
     } catch (exception) {
-      sendMessage("error", "Something went wrong! Couldn`t save the new blog.");
-      setTimeout(() => {
-        clearMessage();
-      }, 5000);
+      dispatch(
+        displayNotification(
+          "error",
+          "Something went wrong! Couldn`t save the new blog.",
+          5,
+        ),
+      );
     }
   };
 
@@ -104,13 +95,13 @@ const App = () => {
       await blogService.updateBlog(blogToLike.id, updatedBlog);
       setNewBlog(updatedBlog);
     } catch (exception) {
-      sendMessage(
-        "error",
-        "Something went wrong! Couldn`t add like to the blog.",
+      dispatch(
+        displayNotification(
+          "error",
+          "Something went wrong! Couldn`t add like to the blog.",
+          5,
+        ),
       );
-      setTimeout(() => {
-        clearMessage();
-      }, 5000);
     }
   };
 
@@ -125,17 +116,20 @@ const App = () => {
         setNewBlog(blogToDelete);
       }
     } catch (exception) {
-      sendMessage("error", "Something went wrong! Couldn`t delete the blog.");
-      setTimeout(() => {
-        clearMessage();
-      }, 5000);
+      dispatch(
+        displayNotification(
+          "error",
+          "Something went wrong! Couldn`t delete the blog.",
+          5,
+        ),
+      );
     }
   };
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <h2>log in to application</h2>
-      <div className={messageClass}>{displayMessage}</div>
+      <Notification />
       <div>
         username
         <input
@@ -163,7 +157,7 @@ const App = () => {
   const blogForm = () => (
     <div>
       <h2>blogs</h2>
-      <div className={messageClass}>{displayMessage}</div>
+      <Notification />
       <p>
         {user.name} logged in <button onClick={handleLogout}>logout</button>
       </p>
