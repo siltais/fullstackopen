@@ -1,22 +1,41 @@
-import { useState } from "react";
+import { createBlog } from "../reducers/blogReducer";
+import { displayNotification } from "../reducers/notificationReducer";
+import { useDispatch } from "react-redux";
+import  { useField } from '../hooks'
 
-const NewBlogForm = ({ createBlog }) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
-  const handleCreateBlog = (event) => {
+const NewBlogForm = () => {
+  const dispatch = useDispatch()
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
+
+  const handleCreateBlog = async (event) => {
     event.preventDefault();
     try {
-      createBlog({
-        title: title,
-        author: author,
-        url: url,
-      });
-      setTitle("");
-      setAuthor("");
-      setUrl("");
+      const blogToCreate = {
+        title: title.value,
+        author: author.value,
+        url: url.value
+      }
+      title.onReset()
+      author.onReset()
+      url.onReset()
+      await dispatch(createBlog(blogToCreate));
+      dispatch(
+        displayNotification(
+          "success",
+          `a new blog ${blogToCreate.title} by ${blogToCreate.author} added`,
+          5,
+        ),
+      );
     } catch (exception) {
-      console.log(exception);
+      dispatch(
+        displayNotification(
+          "error",
+          "Something went wrong! Couldn`t create the blog.",
+          5,
+        ),
+      );
     }
   };
 
@@ -25,36 +44,15 @@ const NewBlogForm = ({ createBlog }) => {
       <h2>create new</h2>
       <div>
         title:
-        <input
-          data-testid="title"
-          className="inputTitle"
-          type="text"
-          value={title}
-          name="Title"
-          onChange={({ target }) => setTitle(target.value)}
-        />
+        <input {...title}/>
       </div>
       <div>
         author:
-        <input
-          data-testid="author"
-          className="inputAuthor"
-          type="text"
-          value={author}
-          name="Author"
-          onChange={({ target }) => setAuthor(target.value)}
-        />
+        <input {...author}/>
       </div>
       <div>
         url:
-        <input
-          data-testid="url"
-          className="inputUrl"
-          type="text"
-          value={url}
-          name="Url"
-          onChange={({ target }) => setUrl(target.value)}
-        />
+        <input {...url}/>
       </div>
       <button type="submit">create</button>
     </form>

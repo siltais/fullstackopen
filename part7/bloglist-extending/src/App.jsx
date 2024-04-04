@@ -6,25 +6,26 @@ import NewBlogForm from "./components/NewBlogForm";
 import Togglable from "./components/Togglable";
 import Notification from "./components/Notification";
 import { displayNotification } from "./reducers/notificationReducer";
-import { useDispatch } from "react-redux";
+import { initializeBlogs } from "./reducers/blogReducer";
+import { useDispatch, useSelector } from "react-redux";
 
 const App = () => {
   const dispatch = useDispatch();
-  const [blogs, setBlogs] = useState([]);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
-  const [newBlog, setNewBlog] = useState("");
   const blogFormRef = useRef();
+
 
   useEffect(() => {
     if (user !== null) {
-      blogService
-        .getAll()
-        .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
+      dispatch(initializeBlogs())
     }
-  }, [user, newBlog]);
+  }, [user]);
+
+  const blogs = useSelector(state => state.blogs)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedInUser");
@@ -34,6 +35,7 @@ const App = () => {
       blogService.setToken(user.token);
     }
   }, []);
+
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -60,28 +62,7 @@ const App = () => {
     setUser(null);
   };
 
-  const handleCreateBlog = async (blogObject) => {
-    try {
-      const createNew = await blogService.createNew(blogObject);
-      setNewBlog(createNew);
-      blogFormRef.current.toggleVisibility();
-      dispatch(
-        displayNotification(
-          "success",
-          `a new blog ${createNew.title} by ${createNew.author} added`,
-          5,
-        ),
-      );
-    } catch (exception) {
-      dispatch(
-        displayNotification(
-          "error",
-          "Something went wrong! Couldn`t save the new blog.",
-          5,
-        ),
-      );
-    }
-  };
+
 
   const handleAddLike = async (blogToLike) => {
     try {
@@ -93,7 +74,6 @@ const App = () => {
         user: blogToLike.user.id,
       };
       await blogService.updateBlog(blogToLike.id, updatedBlog);
-      setNewBlog(updatedBlog);
     } catch (exception) {
       dispatch(
         displayNotification(
@@ -162,9 +142,9 @@ const App = () => {
         {user.name} logged in <button onClick={handleLogout}>logout</button>
       </p>
       <Togglable buttonLabel="new blog" ref={blogFormRef}>
-        <NewBlogForm createBlog={handleCreateBlog} />
+        <NewBlogForm />
       </Togglable>
-      <div data-testid="blogList">
+      <div>
         {blogs.map((blog) => (
           <Blog
             key={blog.id}
