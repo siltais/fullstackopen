@@ -62,50 +62,6 @@ const App = () => {
     setUser(null);
   };
 
-
-
-  const handleAddLike = async (blogToLike) => {
-    try {
-      const updatedBlog = {
-        likes: blogToLike.likes + 1,
-        author: blogToLike.author,
-        title: blogToLike.title,
-        url: blogToLike.url,
-        user: blogToLike.user.id,
-      };
-      await blogService.updateBlog(blogToLike.id, updatedBlog);
-    } catch (exception) {
-      dispatch(
-        displayNotification(
-          "error",
-          "Something went wrong! Couldn`t add like to the blog.",
-          5,
-        ),
-      );
-    }
-  };
-
-  const handleRemoveBlog = async (blogToDelete) => {
-    try {
-      if (
-        window.confirm(
-          `Remove blog ${blogToDelete.title} by ${blogToDelete.author}?`,
-        )
-      ) {
-        await blogService.removeBlog(blogToDelete.id);
-        setNewBlog(blogToDelete);
-      }
-    } catch (exception) {
-      dispatch(
-        displayNotification(
-          "error",
-          "Something went wrong! Couldn`t delete the blog.",
-          5,
-        ),
-      );
-    }
-  };
-
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <h2>log in to application</h2>
@@ -149,9 +105,7 @@ const App = () => {
           <Blog
             key={blog.id}
             blog={blog}
-            handleAddLike={handleAddLike}
             loggedInUser={user}
-            handleRemoveBlog={handleRemoveBlog}
           />
         ))}
       </div>

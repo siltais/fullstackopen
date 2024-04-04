@@ -38,4 +38,12 @@ export const likeBlog = (id, likedBlog) =>{
   }
 }
 
+export const removeBlog = (id) =>{
+  return async dispatch => {
+    await blogService.removeBlog(id)
+    const blogs = await blogService.getAll()
+    dispatch(setBlogs(blogs))    
+  }
+}
+
 export default blogSlice.reducer

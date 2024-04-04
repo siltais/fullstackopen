@@ -1,5 +1,10 @@
 import { useState } from "react";
-const Blog = ({ blog, handleAddLike, loggedInUser, handleRemoveBlog }) => {
+import { useDispatch } from "react-redux";
+import { displayNotification } from "../reducers/notificationReducer";
+import { likeBlog, removeBlog } from "../reducers/blogReducer";
+
+const Blog = ({ blog, loggedInUser }) => {
+  const dispatch = useDispatch()
   const [blogVisible, setBlogVisible] = useState("");
   const blogStyle = {
     paddingTop: 10,
@@ -11,6 +16,48 @@ const Blog = ({ blog, handleAddLike, loggedInUser, handleRemoveBlog }) => {
   const hideWhenVisible = { display: blogVisible ? "none" : "" };
   const showWhenVisible = { display: blogVisible ? "" : "none" };
 
+  const handleAddLike = async (blogToLike) => {
+    try {
+      const updatedBlog = {
+        likes: blogToLike.likes + 1,
+        author: blogToLike.author,
+        title: blogToLike.title,
+        url: blogToLike.url,
+        user: blogToLike.user.id,
+      };
+      await dispatch(likeBlog(blogToLike.id, updatedBlog));
+    } catch (exception) {
+      console.log(exception)
+      dispatch(
+        displayNotification(
+          "error",
+          "Something went wrong! Couldn`t add like to the blog.",
+          5,
+        ),
+      );
+    }
+  };
+
+  const handleRemoveBlog = async (blogToDelete) => {
+    try {
+      if (
+        window.confirm(
+          `Remove blog ${blogToDelete.title} by ${blogToDelete.author}?`,
+        )
+      ) {
+        await dispatch(removeBlog(blogToDelete.id))
+      }
+    } catch (exception) {
+      dispatch(
+        displayNotification(
+          "error",
+          "Something went wrong! Couldn`t delete the blog.",
+          5,
+        ),
+      );
+    }
+  };
+
   const displayRemoveButton = (userNameLoggedIn, blog) => {
     if (userNameLoggedIn === blog.user.username) {
       return (
@@ -20,6 +67,8 @@ const Blog = ({ blog, handleAddLike, loggedInUser, handleRemoveBlog }) => {
       );
     }
   };
+
+
 
   return (
     <div style={blogStyle}>
