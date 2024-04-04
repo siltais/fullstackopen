@@ -4,7 +4,7 @@ import { displayNotification } from "../reducers/notificationReducer";
 import { likeBlog, removeBlog } from "../reducers/blogReducer";
 
 const Blog = ({ blog, loggedInUser }) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [blogVisible, setBlogVisible] = useState("");
   const blogStyle = {
     paddingTop: 10,
@@ -27,7 +27,7 @@ const Blog = ({ blog, loggedInUser }) => {
       };
       await dispatch(likeBlog(blogToLike.id, updatedBlog));
     } catch (exception) {
-      console.log(exception)
+      console.log(exception);
       dispatch(
         displayNotification(
           "error",
@@ -45,7 +45,7 @@ const Blog = ({ blog, loggedInUser }) => {
           `Remove blog ${blogToDelete.title} by ${blogToDelete.author}?`,
         )
       ) {
-        await dispatch(removeBlog(blogToDelete.id))
+        await dispatch(removeBlog(blogToDelete.id));
       }
     } catch (exception) {
       dispatch(
@@ -67,8 +67,6 @@ const Blog = ({ blog, loggedInUser }) => {
       );
     }
   };
-
-
 
   return (
     <div style={blogStyle}>

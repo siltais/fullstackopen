@@ -1,13 +1,13 @@
 import { createBlog } from "../reducers/blogReducer";
 import { displayNotification } from "../reducers/notificationReducer";
 import { useDispatch } from "react-redux";
-import  { useField } from '../hooks'
+import { useField } from "../hooks";
 
 const NewBlogForm = () => {
-  const dispatch = useDispatch()
-  const title = useField('text')
-  const author = useField('text')
-  const url = useField('text')
+  const dispatch = useDispatch();
+  const title = useField("text");
+  const author = useField("text");
+  const url = useField("text");
 
   const handleCreateBlog = async (event) => {
     event.preventDefault();
@@ -15,11 +15,11 @@ const NewBlogForm = () => {
       const blogToCreate = {
         title: title.value,
         author: author.value,
-        url: url.value
-      }
-      title.onReset()
-      author.onReset()
-      url.onReset()
+        url: url.value,
+      };
+      title.onReset();
+      author.onReset();
+      url.onReset();
       await dispatch(createBlog(blogToCreate));
       dispatch(
         displayNotification(
@@ -44,15 +44,15 @@ const NewBlogForm = () => {
       <h2>create new</h2>
       <div>
         title:
-        <input {...title}/>
+        <input {...title} />
       </div>
       <div>
         author:
-        <input {...author}/>
+        <input {...author} />
       </div>
       <div>
         url:
-        <input {...url}/>
+        <input {...url} />
       </div>
       <button type="submit">create</button>
     </form>

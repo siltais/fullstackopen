@@ -1,49 +1,49 @@
-import { createSlice } from '@reduxjs/toolkit'
-import blogService from '../services/blogs'
+import { createSlice } from "@reduxjs/toolkit";
+import blogService from "../services/blogs";
 
 const blogSlice = createSlice({
-  name: 'blogs',
+  name: "blogs",
   initialState: [],
   reducers: {
     appendBlog(state, action) {
-      state.push(action.payload)
+      state.push(action.payload);
     },
     setBlogs(state, action) {
-      return action.payload.sort((a, b) => b.likes - a.likes)
-    }
-  }
-})
+      return action.payload.sort((a, b) => b.likes - a.likes);
+    },
+  },
+});
 
-export const { appendBlog, setBlogs } = blogSlice.actions
+export const { appendBlog, setBlogs } = blogSlice.actions;
 
 export const initializeBlogs = () => {
-  return async dispatch => {
-    const blogs = await blogService.getAll()
-    dispatch(setBlogs(blogs))
-  }
-}
+  return async (dispatch) => {
+    const blogs = await blogService.getAll();
+    dispatch(setBlogs(blogs));
+  };
+};
 
-export const createBlog = content => {
-  return async dispatch => {
-    const newBlog = await blogService.createNew(content)
-    dispatch(appendBlog(newBlog))
-  }
-}
+export const createBlog = (content) => {
+  return async (dispatch) => {
+    const newBlog = await blogService.createNew(content);
+    dispatch(appendBlog(newBlog));
+  };
+};
 
-export const likeBlog = (id, likedBlog) =>{
-  return async dispatch => {
-    await blogService.updateBlog(id, likedBlog)
-    const blogs = await blogService.getAll()
-    dispatch(setBlogs(blogs))    
-  }
-}
+export const likeBlog = (id, likedBlog) => {
+  return async (dispatch) => {
+    await blogService.updateBlog(id, likedBlog);
+    const blogs = await blogService.getAll();
+    dispatch(setBlogs(blogs));
+  };
+};
 
-export const removeBlog = (id) =>{
-  return async dispatch => {
-    await blogService.removeBlog(id)
-    const blogs = await blogService.getAll()
-    dispatch(setBlogs(blogs))    
-  }
-}
+export const removeBlog = (id) => {
+  return async (dispatch) => {
+    await blogService.removeBlog(id);
+    const blogs = await blogService.getAll();
+    dispatch(setBlogs(blogs));
+  };
+};
 
-export default blogSlice.reducer
+export default blogSlice.reducer;

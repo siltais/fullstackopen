@@ -18,14 +18,13 @@ const App = () => {
 
   const blogFormRef = useRef();
 
-
   useEffect(() => {
     if (user !== null) {
-      dispatch(initializeBlogs())
+      dispatch(initializeBlogs());
     }
   }, [user]);
 
-  const blogs = useSelector(state => state.blogs)
+  const blogs = useSelector((state) => state.blogs);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedInUser");
@@ -35,7 +34,6 @@ const App = () => {
       blogService.setToken(user.token);
     }
   }, []);
-
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -102,11 +100,7 @@ const App = () => {
       </Togglable>
       <div>
         {blogs.map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            loggedInUser={user}
-          />
+          <Blog key={blog.id} blog={blog} loggedInUser={user} />
         ))}
       </div>
     </div>
