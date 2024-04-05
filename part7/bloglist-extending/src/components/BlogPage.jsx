@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { likeBlog, removeBlog } from "../reducers/blogReducer";
 import { displayNotification } from "../reducers/notificationReducer";
 import { BrowserRouter as Router, useNavigate } from "react-router-dom";
+import Comments from "../components/Comments";
 
 const BlogPage = ({ blog }) => {
   const navigate = useNavigate();
@@ -73,6 +74,7 @@ const BlogPage = ({ blog }) => {
         <button onClick={() => handleAddLike(blog)}>like</button>
         <div>added by {blog.user.name}</div>
         {displayRemoveButton(user.username, blog)}
+        <Comments comments={blog.comments} blogId={blog.id} />
       </div>
     </div>
   );

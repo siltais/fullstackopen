@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import blogService from "./services/blogs";
+import commentService from "./services/comments";
 import { initializeBlogs } from "./reducers/blogReducer";
 import { setUser } from "./reducers/loginReducer";
 import { fetchUsers } from "./reducers/userReducer";
@@ -21,23 +22,24 @@ import {
 
 const App = () => {
   const dispatch = useDispatch();
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedInUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       dispatch(setUser(user));
       blogService.setToken(user.token);
+      commentService.setToken(user.token);
     }
   }, []);
 
   const user = useSelector((state) => state.login);
   const blogs = useSelector((state) => state.blogs);
-  useEffect(() => {
-    if (user !== null) {
-      dispatch(initializeBlogs());
-      dispatch(fetchUsers());
-    }
-  }, [user, blogs]);
+
+  const matchBlogs = useMatch("/blogs/:id");
+  const blogInfo = matchBlogs
+    ? blogs.find((blog) => blog.id === matchBlogs.params.id)
+    : null;
 
   const users = useSelector((state) => state.users);
   const match = useMatch("/users/:id");
@@ -45,10 +47,12 @@ const App = () => {
     ? users.find((user) => user.id === match.params.id)
     : null;
 
-  const matchBlogs = useMatch("/blogs/:id");
-  const blogInfo = matchBlogs
-    ? blogs.find((blog) => blog.id === matchBlogs.params.id)
-    : null;
+  useEffect(() => {
+    if (user !== null) {
+      dispatch(initializeBlogs());
+      dispatch(fetchUsers());
+    }
+  }, [user, matchBlogs]);
 
   const padding = {
     padding: 5,

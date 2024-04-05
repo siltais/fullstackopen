@@ -62,6 +62,7 @@ const updatingBlog =   {
   author: "Michael Chan.",
   url: "https://github.com/chantastic/sites",
   likes: 999,
+  comments: []
 }
   
 beforeEach(async () => {

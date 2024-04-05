@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import blogService from "../services/blogs";
+import commentService from "../services/comments";
 
 const blogSlice = createSlice({
   name: "blogs",
@@ -40,6 +41,7 @@ export const likeBlog = (id, likedBlog) => {
 
 export const removeBlog = (id) => {
   return async (dispatch) => {
+    commentService.removeComment(id);
     await blogService.removeBlog(id);
     const blogs = await blogService.getAll();
     dispatch(setBlogs(blogs));
