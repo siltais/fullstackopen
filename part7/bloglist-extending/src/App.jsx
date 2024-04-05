@@ -5,6 +5,9 @@ import { setUser } from "./reducers/loginReducer";
 import { useDispatch, useSelector } from "react-redux";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
+import UsersPage from "./components/UsersPage";
+import LoggedInUserInfo from "./components/LoggedInUserInfo";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -25,7 +28,17 @@ const App = () => {
   }, [user]);
 
   const loginForm = () => <LoginForm />;
-  const blogForm = () => <BlogForm />;
+  const blogForm = () => (
+    <div>
+      <LoggedInUserInfo />
+      <Router>
+        <Routes>
+          <Route path="/" element={<BlogForm />} />
+          <Route path="/users" element={<UsersPage />} />
+        </Routes>
+      </Router>
+    </div>
+  );
 
   if (user === null) {
     return loginForm();
