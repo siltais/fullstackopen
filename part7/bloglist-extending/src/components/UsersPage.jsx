@@ -1,9 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
-import { fetchUsers } from "../reducers/userReducer";
+import { useSelector } from "react-redux";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 
 const UsersPage = () => {
-  const dispatch = useDispatch();
-  dispatch(fetchUsers());
   const users = useSelector((state) => state.users);
 
   return (
@@ -19,7 +17,9 @@ const UsersPage = () => {
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
-              <td>{user.name}</td>
+              <td>
+                <Link to={`/users/${user.id}`}>{user.name}</Link>
+              </td>
               <td>{user.blogs.length}</td>
             </tr>
           ))}
