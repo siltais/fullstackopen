@@ -9,12 +9,14 @@ import BlogForm from "./components/BlogForm";
 import UsersPage from "./components/UsersPage";
 import UserPage from "./components/UserPage";
 import BlogPage from "./components/BlogPage";
+import Notification from "./components/Notification";
 import LoggedInUserInfo from "./components/LoggedInUserInfo";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   useMatch,
+  Link,
 } from "react-router-dom";
 
 const App = () => {
@@ -48,10 +50,29 @@ const App = () => {
     ? blogs.find((blog) => blog.id === matchBlogs.params.id)
     : null;
 
+  const padding = {
+    padding: 5,
+  };
+
+  const navStyle = {
+    backgroundColor: "#d3d3d3",
+    padding: 10,
+  };
+
   const loginForm = () => <LoginForm />;
   const blogForm = () => (
     <div>
-      <LoggedInUserInfo />
+      <div style={navStyle}>
+        <Link style={padding} to="/">
+          blogs
+        </Link>
+        <Link style={padding} to="/users">
+          users
+        </Link>
+        <LoggedInUserInfo />
+      </div>
+      <h2>blog app</h2>
+      <Notification />
       <Routes>
         <Route path="/" element={<BlogForm />} />
         <Route path="/users" element={<UsersPage />} />

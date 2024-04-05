@@ -1,7 +1,5 @@
 import { setUser } from "../reducers/loginReducer";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import Notification from "../components/Notification";
+import { useDispatch, useSelector } from "react-redux";
 
 const LoggedInUserInfo = () => {
   const dispatch = useDispatch();
@@ -11,13 +9,9 @@ const LoggedInUserInfo = () => {
   };
   const user = useSelector((state) => state.login);
   return (
-    <div>
-      <h2>blogs</h2>
-      <Notification />
-      <p>
-        {user.name} logged in <button onClick={handleLogout}>logout</button>
-      </p>
-    </div>
+    <span>
+      {user.name} logged in <button onClick={handleLogout}>logout</button>
+    </span>
   );
 };
 export default LoggedInUserInfo;
