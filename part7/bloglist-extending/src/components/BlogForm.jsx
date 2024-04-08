@@ -20,6 +20,7 @@ const BlogForm = () => {
           <Blog key={blog.id} blog={blog} loggedInUser={user} />
         ))}
       </div>
+      <br />
     </div>
   );
 };

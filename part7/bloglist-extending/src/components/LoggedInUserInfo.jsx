@@ -10,7 +10,10 @@ const LoggedInUserInfo = () => {
   const user = useSelector((state) => state.login);
   return (
     <span>
-      {user.name} logged in <button onClick={handleLogout}>logout</button>
+      {user.name} logged in{" "}
+      <button className="ui button" onClick={handleLogout}>
+        logout
+      </button>
     </span>
   );
 };

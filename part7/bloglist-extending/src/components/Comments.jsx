@@ -3,10 +3,11 @@ import { useDispatch } from "react-redux";
 import { useField } from "../hooks";
 import commentService from "../services/comments";
 import { initializeBlogs } from "../reducers/blogReducer";
+import { FormField, Form, Input } from "semantic-ui-react";
 
 const Comments = ({ comments, blogId }) => {
   const dispatch = useDispatch();
-  const comment = useField("text");
+  const comment = useField("teaxtarea");
 
   const handleAddComment = async (event) => {
     event.preventDefault();
@@ -36,15 +37,18 @@ const Comments = ({ comments, blogId }) => {
   return (
     <div>
       <h2>comments</h2>
-      <form onSubmit={handleAddComment}>
-        <input {...comment} />
-        <button type="submit">add comment</button>
-        <ul>
-          {comments.map((comment) => (
-            <li key={comment.id}>{comment.comment}</li>
-          ))}
-        </ul>
-      </form>
+
+      <ul>
+        {comments.map((comment) => (
+          <li key={comment.id}>{comment.comment}</li>
+        ))}
+      </ul>
+      <Form onSubmit={handleAddComment}>
+        <Input style={{ margin: 2 }} className="big" {...comment} />
+        <button className="ui primary button" type="submit">
+          add comment
+        </button>
+      </Form>
     </div>
   );
 };

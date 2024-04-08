@@ -3,6 +3,7 @@ import { displayNotification } from "../reducers/notificationReducer";
 import { loginUser } from "../reducers/loginReducer";
 import Notification from "../components/Notification";
 import { useField } from "../hooks";
+import { FormField, Form, Input } from "semantic-ui-react";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -22,19 +23,21 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleLogin}>
+    <Form onSubmit={handleLogin}>
       <h2>log in to application</h2>
       <Notification />
-      <div>
-        username
-        <input {...username} />
-      </div>
-      <div>
-        password
-        <input {...password} />
-      </div>
-      <button type="submit">login</button>
-    </form>
+      <FormField>
+        <label>Username</label>
+        <Input {...username} />
+      </FormField>
+      <FormField>
+        <label>Password</label>
+        <Input {...password} />
+      </FormField>
+      <button className="ui button" type="submit">
+        login
+      </button>
+    </Form>
   );
 };
 export default LoginForm;

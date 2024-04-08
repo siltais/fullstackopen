@@ -7,7 +7,7 @@ const UsersPage = () => {
   return (
     <div>
       <h2>Users</h2>
-      <table>
+      <table className="ui very basic collapsing celled table">
         <thead>
           <tr>
             <th></th>

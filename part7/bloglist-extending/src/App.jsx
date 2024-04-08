@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import blogService from "./services/blogs";
 import commentService from "./services/comments";
 import { initializeBlogs } from "./reducers/blogReducer";
@@ -66,16 +66,18 @@ const App = () => {
   const loginForm = () => <LoginForm />;
   const blogForm = () => (
     <div>
-      <div style={navStyle}>
-        <Link style={padding} to="/">
+      <div className="ui menu">
+        <Link className="item" to="/">
           blogs
         </Link>
-        <Link style={padding} to="/users">
+        <Link className="item" to="/users">
           users
         </Link>
-        <LoggedInUserInfo />
+        <div className="right item">
+          <LoggedInUserInfo />
+        </div>
       </div>
-      <h2>blog app</h2>
+      <h2>Blog app</h2>
       <Notification />
       <Routes>
         <Route path="/" element={<BlogForm />} />

@@ -2,6 +2,7 @@ import { createBlog } from "../reducers/blogReducer";
 import { displayNotification } from "../reducers/notificationReducer";
 import { useDispatch } from "react-redux";
 import { useField } from "../hooks";
+import { FormField, Form, Input } from "semantic-ui-react";
 
 const NewBlogForm = () => {
   const dispatch = useDispatch();
@@ -40,22 +41,24 @@ const NewBlogForm = () => {
   };
 
   return (
-    <form onSubmit={handleCreateBlog}>
+    <Form onSubmit={handleCreateBlog}>
       <h2>create new</h2>
-      <div>
-        title:
+      <FormField>
+        <label>title</label>
         <input {...title} />
-      </div>
-      <div>
-        author:
+      </FormField>
+      <FormField>
+        <label>author</label>
         <input {...author} />
-      </div>
-      <div>
-        url:
+      </FormField>
+      <FormField>
+        <label>url</label>
         <input {...url} />
-      </div>
-      <button type="submit">create</button>
-    </form>
+      </FormField>
+      <button className="ui positive button" type="submit">
+        create
+      </button>
+    </Form>
   );
 };
 
