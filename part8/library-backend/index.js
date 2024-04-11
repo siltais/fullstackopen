@@ -65,7 +65,6 @@ const typeDefs =`
   }
   `
 
-
 const resolvers = {
   Query: {
     bookCount: async () => Book.collection.countDocuments(),
@@ -103,10 +102,30 @@ const resolvers = {
       let author = await Author.findOne({ name: args.author })
       if(!author){
         author = new Author({ name: args.author })
-        await author.save()
+        try {
+          await author.save()
+        } catch (e) {
+          throw new GraphQLError('Saving author failed', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args.author,
+              e
+            }
+          })
+        }       
       }
       const book = new Book({ ...args, author: { ...author } })
-      await book.save()
+      try{
+        await book.save()
+      } catch (e) {
+        throw new GraphQLError('Saving book failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.title,
+            e
+          }
+        })
+      }
       await book.populate('author', { name: 1 })
       return book      
     },
@@ -116,7 +135,17 @@ const resolvers = {
         return null
       }
       author.born = args.setBornTo
-      await author.save()
+      try {
+        await author.save()
+      } catch (e) {
+        throw new GraphQLError('Editing author failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name,
+            e
+          }
+        })
+      }    
       return author
     }
   }
