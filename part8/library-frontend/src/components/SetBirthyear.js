@@ -11,7 +11,11 @@ const SetBirthyear = ({authors}) => {
     refetchQueries: [ { query: ALL_AUTHORS } ],
     onError: (error) => {
       const messages = error.graphQLErrors.map(e => e.message).join('\n')
-      console.log(messages)
+      setMsg('born value must be a number')
+      setTimeout(() => {
+        setMsg(null)
+      }, 5000)
+
     }
   })
 

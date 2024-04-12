@@ -27,7 +27,7 @@ const Books = (props) => {
             <tr key={a.id}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
-              <td>{a.published}</td>
+              <td>{a.published !== 0 ? a.published : 'unknown'}</td>
             </tr>
           ))}
         </tbody>

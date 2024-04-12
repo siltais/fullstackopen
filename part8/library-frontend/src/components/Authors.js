@@ -13,6 +13,12 @@ const Authors = (props) => {
   
   const authors = result.data.allAuthors
 
+  const chkLogin = () => {
+    if(props.token){
+      return <SetBirthyear authors={authors} />
+    }
+  }
+
   return (
     <div>
       <h2>authors</h2>
@@ -32,7 +38,7 @@ const Authors = (props) => {
           ))}
         </tbody>
       </table>
-      <SetBirthyear authors={authors} />
+      {chkLogin()}
     </div>
   )
 }
