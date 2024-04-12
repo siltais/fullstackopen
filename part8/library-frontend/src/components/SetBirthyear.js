@@ -10,7 +10,7 @@ const SetBirthyear = ({authors}) => {
   const [ editAuthor, result ] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [ { query: ALL_AUTHORS } ],
     onError: (error) => {
-      const messages = error.graphQLErrors.map(e => e.message).join('\n')
+      //const messages = error.graphQLErrors.map(e => e.message).join('\n')
       setMsg('born value must be a number')
       setTimeout(() => {
         setMsg(null)
