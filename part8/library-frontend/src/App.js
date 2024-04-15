@@ -10,6 +10,7 @@ const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(null)
   const [msg, setMsg] = useState(null)
+  const [newBook, setNewBook] = useState([])
   const client = useApolloClient()
 
 
@@ -54,8 +55,8 @@ const App = () => {
       </div>
       <div>{msg}</div>
       <Authors show={page === 'authors'} displayMsg={displayMsg} token={token}/>
-      <Books show={page === 'books'} />
-      <NewBook show={page === 'add'} displayMsg={displayMsg} />
+      <Books show={page === 'books'} newBook={newBook} client={client} />
+      <NewBook show={page === 'add'} displayMsg={displayMsg} setNewBook={setNewBook} />
       <Login show={page === 'login'} setToken={setToken} setPage={setPage} displayMsg={displayMsg} />
       <Recommend show={page === 'recommend'} />
 
