@@ -25,21 +25,16 @@ const resolvers = {
       }
       return booksToReturn
     },
-    allAuthors: async () => await Author.find({}),
+    allAuthors: async () => {
+      return await Author.find({})
+    },
     me: (root, args, context) => {
       return context.currentUser
     }
   },
   Author:{
     bookCount: async (root) => {
-      let countBooks = 0
-      const books = await Book.find({}).populate('author', { name: 1 })
-      books.forEach((book) => {
-        if(root.name === book.author.name){
-          countBooks++
-        }
-      })
-      return countBooks
+     return root.books.length
     }
   },
   Mutation: {
@@ -81,6 +76,9 @@ const resolvers = {
         })
       }
       await book.populate('author', { name: 1 })
+      const newBook = [book.id]
+      author.books = author.books.concat(newBook)
+      await author.save()
       pubsub.publish('BOOK_ADDED', { bookAdded: book })
       return book      
     },

@@ -5,7 +5,7 @@ const Recommend = (props) => {
   const result = useQuery(ALL_BOOKS)
   const meResult = useQuery(ME)
   
-  if (!props.show) {
+  if (!props.show || !meResult.data.me.favoriteGenre) {
     return null
   }
   if (result.loading || meResult.loading)  {

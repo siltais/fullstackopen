@@ -14,7 +14,7 @@ const Authors = (props) => {
   const authors = result.data.allAuthors
 
   const chkLogin = () => {
-    if(props.token){
+    if(props.token && authors.length > 0){
       return <SetBirthyear authors={authors} />
     }
   }
