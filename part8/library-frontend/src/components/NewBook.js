@@ -14,7 +14,7 @@ const NewBook = (props) => {
     onError: (error) => {
       const messages = error.graphQLErrors.map(e => e.message).join('\n')
       props.displayMsg(messages)
-    }
+    },
   })
 
   if (!props.show) {

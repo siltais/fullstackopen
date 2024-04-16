@@ -5,7 +5,7 @@ import NewBook from './components/NewBook'
 import Login from './components/Login'
 import Recommend from './components/Recommend'
 import { useApolloClient, useSubscription } from '@apollo/client'
-import { BOOK_ADDED } from './queries'
+import { BOOK_ADDED, ALL_BOOKS, ALL_AUTHORS } from './queries'
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -15,11 +15,24 @@ const App = () => {
   const client = useApolloClient()
 
   useSubscription(BOOK_ADDED, {
-    onData: ({data}) => {
+    onData: ({ data, client }) => {
       window.alert(`New book added. \n${data.data.bookAdded.title} by ${data.data.bookAdded.author.name}`)
-    }
-  })
+      client.refetchQueries({
+        include: [ALL_BOOKS, ALL_AUTHORS],
+      })
 
+      if(data.data.bookAdded.genres) {
+        data.data.bookAdded.genres.forEach(genre => {
+          client.cache.evict({
+            id: "ROOT_QUERY",
+            fieldName: "allBooks",
+            args: { genre: genre },
+          })          
+        })
+       } 
+      }
+    }
+  )
 
   const chkLogin = () => {
     if(!token) {
